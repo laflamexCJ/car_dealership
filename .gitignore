@@ -1,0 +1,43 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+# Local configuration (keep examples)
+.env
+.env.*
+!.env.example
+# SQLite
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+# Frontend and build outputs
+node_modules/
+dist/
+build/
+coverage/
+# Editors and operating systems
+.DS_Store
+.vscode/
+.idea/
+
+# Local secrets and credentials
+*.pem
+*.key
+secrets/
+credentials.json
+# Tool caches and logs
+.cache/
+.npm/
+.npm-cache/
+*.log
+.coverage.*
