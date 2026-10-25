@@ -52,3 +52,29 @@ def test_concurrent_seed_and_existing_match(client):
     rows = client.get('/api/vehicles', headers=headers).json()
     assert len(rows) == 20
     assert next(row for row in rows if row['id'] == existing['id']) == existing
+
+
+def test_seed_cli_initializes_database_without_api_startup(tmp_path):
+    import os
+    from pathlib import Path
+    import secrets
+    import sqlite3
+    import subprocess
+    import sys
+
+    # Model the documented backend working directory, with a fresh relative DB.
+    backend_dir = tmp_path / 'backend'
+    backend_dir.mkdir()
+    script = Path(__file__).resolve().parents[1] / 'seed_vehicles.py'
+    env = {**os.environ, 'DATABASE_URL': 'sqlite:///./dealership.db',
+           'JWT_SECRET_KEY': secrets.token_urlsafe(48)}
+    for expected in ['Added 20 sample vehicles', 'Added 0 sample vehicles']:
+        result = subprocess.run([sys.executable, str(script)], cwd=backend_dir,
+                                env=env, capture_output=True, text=True)
+        assert result.returncode == 0, result.stderr
+        assert expected in result.stdout
+    database = backend_dir / 'dealership.db'
+    assert database.is_file()
+    with sqlite3.connect(database) as connection:
+        assert connection.execute('SELECT COUNT(*) FROM vehicles').fetchone()[0] == 20
+        assert connection.execute('SELECT COUNT(*) FROM users').fetchone()[0] == 0

@@ -184,7 +184,7 @@ manual-completion checklist. This AI-usage summary is separate from those excerp
 
 ## Optional sample inventory
 
-After starting the API once to create its tables, load 20 varied demo listings:
+Load 20 varied demo listings (API startup is not required):
 
 ```bash
 cd /workspace/car_dealership/backend
@@ -192,7 +192,9 @@ cd /workspace/car_dealership/backend
 ```
 
 On Windows, from `backend`, use `.venv\Scripts\python.exe seed_vehicles.py`.
-The command uses the API's existing database configuration. It only inserts missing
+The command uses the API's existing database configuration and creates missing
+tables using the same application metadata. Existing tables and records are not
+reset or replaced. It only inserts missing
 make/model/category combinations; rerunning skips matches and preserves existing
 users, vehicles, prices and stock (including purchases). It never resets the database.
 Run from `backend/` so the default relative SQLite path matches the API.

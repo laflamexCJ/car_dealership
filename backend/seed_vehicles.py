@@ -27,7 +27,7 @@ SAMPLE_VEHICLES = (
 
 
 def seed_vehicles(engine):
-    from main import Vehicle, VehicleCreate
+    from main import Base, Vehicle, VehicleCreate
 
     # Validate everything before opening the write transaction.
     samples = [VehicleCreate(make=make, model=model, category=category,
@@ -40,6 +40,8 @@ def seed_vehicles(engine):
         # Serialize concurrent seed runs without adding a constraint or changing schema.
         connection.exec_driver_sql('BEGIN IMMEDIATE')
         try:
+            # Importing the app does not run its lifespan; create only missing tables.
+            Base.metadata.create_all(connection)
             existing = {tuple(row) for row in connection.execute(select(Vehicle.make, Vehicle.model, Vehicle.category))}
             for sample in samples:
                 key = (sample['make'], sample['model'], sample['category'])
@@ -57,6 +59,6 @@ def seed_vehicles(engine):
 if __name__ == '__main__':
     from main import app
 
-    # Use the same engine/configuration as the API. Run from backend/ after API startup.
+    # Use the same engine/configuration as the API. Run from backend/ just like the API.
     count = seed_vehicles(app.state.engine)
     print(f'Added {count} sample vehicles; skipped {len(SAMPLE_VEHICLES) - count} existing matches.')
