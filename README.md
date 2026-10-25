@@ -181,3 +181,26 @@ feature assertions. The actual backend verification record is in
 `PROMPTS.md` contains excerpts of the actual AI exchanges from this conversation.
 The transcript is incomplete; omitted messages and records are identified in its
 manual-completion checklist. This AI-usage summary is separate from those excerpts.
+
+## Optional sample inventory
+
+After starting the API once to create its tables, load 20 varied demo listings:
+
+```bash
+cd /workspace/car_dealership/backend
+.venv/bin/python seed_vehicles.py
+```
+
+On Windows, from `backend`, use `.venv\Scripts\python.exe seed_vehicles.py`.
+The command uses the API's existing database configuration. It only inserts missing
+make/model/category combinations; rerunning skips matches and preserves existing
+users, vehicles, prices and stock (including purchases). It never resets the database.
+Run from `backend/` so the default relative SQLite path matches the API.
+
+Samples cover sedans, SUVs, trucks, hatchbacks, a wagon, coupes and a convertible,
+with USD prices from $19,950 to $68,900 and quantities from 0 to 9. Prices are
+illustrative, not live quotes. Try searching `Toyota` or `Hybrid`, category `SUV`,
+and prices between 30000 and 42000. Year, fuel type and mileage are not schema
+fields, so no unsupported fields or filters are introduced. If you rename a sample's
+make/model/category, rerunning can add its original listing again. Database contents
+remain local and ignored by Git; run the command on each demonstration machine.
